@@ -11,14 +11,14 @@ audio2chunk_const: Vec -> Chunk1D   # group similar samples together as a sequen
 audio2chunk_var: Vec -> Chunk1D     # the same as audio2chunk_const, but the number of chunks is allowed to be variable, as in audio with a lot of variation (a higher information density) will have more and smaller chunks
 fft_downsampler: Matrix -> Matrix   # uses either filters or pooling algorithms to downsample sequential FFT frames
 fft2chunk_const: Matrix -> Chunk2D  # uses a predefined grid size, adjusting the thresholds of the x and y grid lines to preserve as much information as possible
-fft2chunk_var2        # uses binary decision trees 
-fft2chunk_var4        # uses quad decision trees
+fft2chunk_var2: Matrix -> Chunk2D   # uses binary decision trees 
+fft2chunk_var4: Matrix -> Chunk2D   # uses quad decision trees
 
 # === classless statistical learning algorithms ===
-audio2pca             # performs principal component analysis on a batch of audio clips (they should have common characteristics to be effective)
-fft2pca               # performs principal component analysis on a batch of FFTs
-audio2auto_encoder    # trains an auto-encoder on a batch of audio clips (they should have common characteristics to be effective), may be used after a PCA stage
-fft2auto_encoder      # trains an auto-encoder on a batch of FFTs, may be used after a PCA stage
+audio2pca: Matrix -> Matrix               # performs principal component analysis on a batch of audio clips (they should have common characteristics to be effective)
+fft2pca: Matrix -> Matrix                 # performs principal component analysis on a batch of FFTs
+audio2auto_encoder: Matrix -> Matrix, AE  # trains an auto-encoder on a batch of audio clips (they should have common characteristics to be effective), may be used after a PCA stage
+fft2auto_encoder: Matrix -> Matrix, AE    # trains an auto-encoder on a batch of FFTs, may be used after a PCA stage
 
 
 

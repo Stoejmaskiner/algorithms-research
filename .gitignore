@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Remove copyrighted content =)
+training_data/
+training_data/**
+generated_data/
+generated_data/**

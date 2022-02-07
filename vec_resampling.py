@@ -2,6 +2,8 @@
 Performs downsampling of a vector, using various techniques
 """
 
+# TODO: candidate for removal, as scipy.interpolate is a better substitute
+
 import math
 from typing import List
 from enum import Enum
@@ -12,7 +14,7 @@ import matplotlib.pyplot as plt
 import torch
 from torch import nn
 
-def vec_downsample(vec: np.array, divisor: float, mode: str = 'linear') -> np.ndarray:
+def vec_downsample(vec: np.array, divisor: int, mode: str = 'linear') -> np.ndarray:
     """Downsample an ndarray by an integer ratio
     
     mode may be: 'none', 'nearest', 'linear', 'quadratic', 'cubic', 'max-pool',
@@ -79,14 +81,40 @@ def vec_downsample(vec: np.array, divisor: float, mode: str = 'linear') -> np.nd
     return None
     
 
+def vec_upsample(vec: np.array, multiplier: int, mode: str = 'linear') -> np.ndarray:
+    """Usample an ndarray by an integer ratio
+    
+    mode may be: 'none', 'nearest', 'linear', 'quadratic', 'cubic'
+    """
+    xold = lambda v: np.linspace(0, len(v), len(v))
+    xnew = lambda v: np.linspace(0, len(v), len(v) * multiplier)
+    intp = lambda v, m: interp1d(xold(v), v, kind=m)(xnew(v))
+
+    if mode == 'none':
+        return intp(vec, 'previous')
+
+    if mode == 'nearest':
+        return intp(vec, 'nearest')
+    
+    if mode == 'linear':
+        return intp(vec, 'linear')
+
+    if mode == 'quadratic':
+        return intp(vec, 'quadratic')
+
+    if mode == 'cubic':
+        return intp(vec, 'cubic')
+    
 
 
 # testing
 if __name__ == '__main__':
-    x = np.linspace(0, 10, 100)
+    x = np.linspace(0, 10, 1000)
     y = np.sin((0.5*x)**2)
-    ynew = vec_downsample(y, 10, 'mean-pool')
+    ynew = vec_downsample(y, 100, 'median-pool')
+    ynewnew = vec_upsample(ynew, 100, 'none')
     xnew = np.linspace(0, 10, len(ynew))
-    plt.plot(x,y,'o')
-    plt.plot(xnew,ynew,'o')
+    plt.plot(x,y)
+    plt.plot(xnew,ynew)
+    plt.plot(x,ynewnew)
     plt.show()
